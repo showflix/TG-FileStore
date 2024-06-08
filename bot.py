@@ -467,5 +467,20 @@ async def button(bot: Client, cmd: CallbackQuery):
         await cmd.answer()
     except QueryIdInvalid: pass
 
+class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b"Hello, Team!")
+
+def run_http_server():
+    server_address = ('', 5000)
+    httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
+    httpd.serve_forever()
+
+# Run HTTP server in a separate thread
+http_server_thread = threading.Thread(target=run_http_server)
+http_server_thread.start()
 
 Bot.run()
